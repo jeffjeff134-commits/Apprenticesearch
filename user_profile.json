@@ -1,0 +1,16 @@
+{
+    "name": "Alex Candidate",
+    "education": "A-Levels (Maths, Physics, CS)",
+    "interests": [
+        "Software Development",
+        "Data Analysis",
+        "FinTech"
+    ],
+    "skills": [
+        "Python",
+        "JavaScript",
+        "SQL",
+        "Teamwork"
+    ],
+    "location_preference": "London"
+}
