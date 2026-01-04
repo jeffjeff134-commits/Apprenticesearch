@@ -199,24 +199,32 @@ The system automatically infers attributes for roles based on keywords:
 - **Audit/Finance**: Numerical Literacy, Professional Integrity, Stakeholder Management
 - **Business/Project Management**: Time Management, Conflict Resolution, Commercial Awareness
 
-## 🤖 AI Features
+### AI Features (Google Gemini)
 
-When `GOOGLE_GENERATIVE_AI_API_KEY` is configured:
-- Career path analysis based on user interests and skills
-- Application advice generation
-- Match score calculation between users and roles
+The system uses Google Gemini (via Vercel AI SDK) for:
+- **Career Path Analysis**: Intelligent suggestions based on student profile.
+- **Application Advice**: Personalized tips for specific roles.
+- **Match Scoring**: Advanced similarity calculation between users and roles.
 
-If not configured, the system gracefully degrades to rule-based matching.
+> [!NOTE]
+> If `GOOGLE_GENERATIVE_AI_API_KEY` is not provided, the system gracefully falls back to rule-based logic.
 
-## 🚢 Deployment to Vercel
+---
 
-1. Push your code to GitHub
-2. Import the repository in Vercel
-3. Add environment variables in Vercel dashboard:
-   - `GOOGLE_GENERATIVE_AI_API_KEY`
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Deploy!
+## 🛠 Setup & Installation
+
+1. **Clone & Install**
+   ```bash
+   npm install
+   ```
+
+2. **Environment Variables**
+   Create a `.env.local` file:
+   ```env
+   GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
 ## 🔐 Security Notes
 
