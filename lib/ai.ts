@@ -1,11 +1,11 @@
-import { openai } from '@ai-sdk/openai';
-import { generateText, streamText } from 'ai';
+import { google } from '@ai-sdk/google';
+import { generateText } from 'ai';
 
 // Check if API key is configured
-const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
 if (!apiKey) {
-    console.warn('OPENAI_API_KEY not configured. AI features will be disabled.');
+    console.warn('GOOGLE_GENERATIVE_AI_API_KEY not configured. AI features will be disabled.');
 }
 
 /**
@@ -16,7 +16,7 @@ if (!apiKey) {
  */
 export async function analyzeCareerPath(interests: string[], skills: string[]) {
     if (!apiKey) {
-        throw new Error('OpenAI API key not configured');
+        throw new Error('Google API key not configured');
     }
 
     const prompt = `Given a student with the following profile:
@@ -41,7 +41,7 @@ Format the response as JSON with this structure:
 }`;
 
     const { text } = await generateText({
-        model: openai('gpt-4-turbo'),
+        model: google('gemini-1.5-flash'),
         prompt,
     });
 
@@ -59,7 +59,7 @@ export async function generateApplicationAdvice(
     userSkills: string[]
 ) {
     if (!apiKey) {
-        throw new Error('OpenAI API key not configured');
+        throw new Error('Google API key not configured');
     }
 
     const prompt = `A student is applying for a "${roleTitle}" apprenticeship.
@@ -73,7 +73,7 @@ Provide 3 specific, actionable tips for their application that:
 Keep each tip concise (2-3 sentences).`;
 
     const { text } = await generateText({
-        model: openai('gpt-4-turbo'),
+        model: google('gemini-1.5-flash'),
         prompt,
     });
 
@@ -127,7 +127,7 @@ Respond with JSON:
 }`;
 
     const { text } = await generateText({
-        model: openai('gpt-4-turbo'),
+        model: google('gemini-1.5-flash'),
         prompt,
     });
 
