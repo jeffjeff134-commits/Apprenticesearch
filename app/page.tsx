@@ -1,5 +1,6 @@
-import fs from 'fs';
-import path from 'path';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 // Interfaces for our data
@@ -11,7 +12,7 @@ interface Role {
   salary: string;
   deadline: string;
   url: string;
-  match_score?: number; // Optional, can be calculated
+  match_score?: number;
   skills: string[];
 }
 
@@ -23,36 +24,96 @@ interface UserProfile {
   location_preference: string;
 }
 
-async function getData() {
-  const dataDir = path.join(process.cwd(), 'data');
+export default function Dashboard() {
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Read Roles
-  const rolesPath = path.join(dataDir, 'roles_db.json');
-  let roles: Role[] = [];
-  try {
-    const rolesData = fs.readFileSync(rolesPath, 'utf8');
-    // Handle potential wrapper object if roles_db.json is { "roles": [...] } or just [...]
-    const parsed = JSON.parse(rolesData);
-    roles = Array.isArray(parsed) ? parsed : (parsed.roles || []);
-  } catch (error) {
-    console.error("Error reading roles_db.json", error);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch roles from API
+        const rolesResponse = await fetch('/api/roles');
+        if (!rolesResponse.ok) {
+          throw new Error('Failed to fetch roles');
+        }
+        const rolesData = await rolesResponse.json();
+        setRoles(rolesData.roles || []);
+
+        // Fetch profile from API (using default user - first available profile)
+        const profileResponse = await fetch('/api/vibe-check');
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          // Use first profile if available
+          if (profileData.profiles && profileData.profiles.length > 0) {
+            const firstProfile = profileData.profiles[0];
+            setProfile({
+              name: firstProfile.first_name,
+              education: firstProfile.predicted_grades || '',
+              interests: Array.isArray(firstProfile.interests) ? firstProfile.interests : [],
+              skills: [],
+              location_preference: ''
+            });
+          } else {
+            // Fallback to default profile
+            setProfile({
+              name: 'Alex Candidate',
+              education: 'A-Levels (Maths, Physics, CS)',
+              interests: ['Software Development', 'Data Analysis', 'FinTech'],
+              skills: ['Python', 'JavaScript', 'SQL', 'Teamwork'],
+              location_preference: 'London'
+            });
+          }
+        } else {
+          // Fallback to default profile if not found in database
+          setProfile({
+            name: 'Alex Candidate',
+            education: 'A-Levels (Maths, Physics, CS)',
+            interests: ['Software Development', 'Data Analysis', 'FinTech'],
+            skills: ['Python', 'JavaScript', 'SQL', 'Teamwork'],
+            location_preference: 'London'
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading apprenticeships...</p>
+        </div>
+      </div>
+    );
   }
 
-  // Read Profile
-  const profilePath = path.join(dataDir, 'user_profile.json');
-  let profile: UserProfile | null = null;
-  try {
-    const profileData = fs.readFileSync(profilePath, 'utf8');
-    profile = JSON.parse(profileData);
-  } catch (error) {
-    console.error("Error reading user_profile.json", error);
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold mb-2">Error Loading Data</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
-
-  return { roles, profile };
-}
-
-export default async function Dashboard() {
-  const { roles, profile } = await getData();
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
@@ -161,7 +222,7 @@ export default async function Dashboard() {
 
           {roles.length === 0 && (
             <div className="col-span-full text-center py-12 text-gray-500">
-              No roles found. Please populate roles_db.json.
+              No roles found. Please configure your Supabase database and run the migration script.
             </div>
           )}
         </section>
