@@ -12,7 +12,7 @@ This application has been converted from local file-based operations to a full-s
 ### Backend
 - **API Routes**: Next.js serverless functions
 - **Database**: Supabase (PostgreSQL)
-- **AI**: Vercel AI SDK with OpenAI
+- **AI**: Vercel AI SDK with Google Gemini
 
 ### Agents (Now as API Routes)
 
@@ -46,8 +46,8 @@ This application has been converted from local file-based operations to a full-s
 Create a `.env.local` file in the root directory:
 
 ```env
-# OpenAI API Key (for Vercel AI SDK)
-OPENAI_API_KEY=your_openai_api_key_here
+# Google Gemini API Key (for Vercel AI SDK)
+GOOGLE_GENERATIVE_AI_API_KEY=your_openai_api_key_here
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -201,7 +201,7 @@ The system automatically infers attributes for roles based on keywords:
 
 ## 🤖 AI Features
 
-When `OPENAI_API_KEY` is configured:
+When `GOOGLE_GENERATIVE_AI_API_KEY` is configured:
 - Career path analysis based on user interests and skills
 - Application advice generation
 - Match score calculation between users and roles
@@ -213,7 +213,7 @@ If not configured, the system gracefully degrades to rule-based matching.
 1. Push your code to GitHub
 2. Import the repository in Vercel
 3. Add environment variables in Vercel dashboard:
-   - `OPENAI_API_KEY`
+   - `GOOGLE_GENERATIVE_AI_API_KEY`
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Deploy!
@@ -248,10 +248,10 @@ To enhance the system:
 - Review server logs in terminal
 
 ### AI features not working
-- Ensure `OPENAI_API_KEY` is configured
+- Ensure `GOOGLE_GENERATIVE_AI_API_KEY` is configured
 - System will fallback to rule-based logic if AI fails
 
 ---
 
-**Tech Stack**: Next.js 16.1.1, React, TypeScript, Tailwind CSS, Supabase, Vercel AI SDK, OpenAI  
+**Tech Stack**: Next.js 16.1.1, React, TypeScript, Tailwind CSS, Supabase, Vercel AI SDK, Google Gemini  
 **Repository**: https://github.com/jeffjeff134-commits/Apprenticesearch.git

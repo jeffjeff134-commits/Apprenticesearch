@@ -119,7 +119,7 @@ curl -X POST http://localhost:3000/api/vibe-check \
 }
 ```
 
-The vibe_summary is automatically generated using AI (if OpenAI configured) or a simple text template.
+The vibe_summary is automatically generated using AI (if Google Gemini configured) or a simple text template.
 
 #### Update a Profile
 ```bash
@@ -263,5 +263,5 @@ The dashboard at http://localhost:3000 automatically:
 
 - All JSONB fields (`attributes`, `interests`) are automatically handled by the API
 - The Scout infers attributes automatically - you don't need to provide them
-- The Vibe-Check can generate summaries using AI if `OPENAI_API_KEY` is configured
+- The Vibe-Check can generate summaries using AI if `GOOGLE_GENERATIVE_AI_API_KEY` is configured
 - All endpoints include proper error handling and validation
